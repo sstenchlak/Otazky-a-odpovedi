@@ -1,0 +1,88 @@
+<h1>Vložení nové otázky</h1>
+
+<div class="panel panel-default">
+	<div class="panel-body">
+Můžete také
+
+<a href="<?= URL_ROOT ?>/admin/questions/import/" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Hromadné vložení otázek (doporučeno)</a>
+
+<a href="<?= URL_ROOT ?>/admin/questions/" class="btn btn-primary"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Spravovat otázky</a>
+
+<a href="<?= URL_ROOT ?>/admin/questions/categories/" class="btn btn-default"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Spravovat kategorie</a>
+
+	</div>
+</div>
+
+<hr>
+
+<div class="alert alert-success question-alert" role="alert" id="questionOK" style="display:none;">
+	<h4>Úspěšně uloženo!</h4>
+	<p>Nyní jste úspěšně uložili otázku do aplikace, můžete pokračovat vkládáním dalších otázek. Psst: použijte <a href="<?= URL_ROOT ?>/admin/questions/import/">import</a> pro rychlejší vkládání většího množství otázek.</p>
+</div>
+
+<div class="alert alert-warning question-alert" role="alert" id="questionLOAD" style="display:none;">
+	<h4>Probíhá ukládání otázky</h4>
+	<p>Počkejte prosím, než se otázka uloží. Pokud to trvá dlouho, stiskněte F5.</p>
+</div>
+
+<div class="alert alert-danger question-alert" role="alert" id="questionFAIL" style="display:none;">
+	<h4>Chyba při ukládání!</h4>
+	<p>Při pokusu o vložení této otázky se vyskytla chyba. Prosím zkontrolujte, zda jste všechny pole vyplnili správně a akci opakujte!</p>
+	<br>
+	<pre></pre>
+</div>
+
+
+<div class="panel panel-default">
+	<div class="panel-body">
+		Do formuláře níže můžete vložit jednu otázku. Pokud si s nějakým polem nebudete vědět rady, můžete myší najet na otazník (<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Pokud si nebudete vědět rady s nějakým políčkem, najeďte na otazník vedle.."></span>). Poté dole klikněte na vložit otázku.
+	</div>
+</div>
+
+<!-- Hlavní formulář -->
+<form method="POST" id="addForm">
+	<!-- Akce pro PHP která se má vykonat -->
+		<input type="hidden" name="action" value="question_add">
+		<input type="hidden" name="AJAX" value="1">
+
+	<table class="table table-bordered table-stylized" style="max-width: 800px; margin: auto;">
+		<tbody>
+<?php foreach (questions::$columns as $key => $column) { ?>
+			<tr>
+				<td><span data-toggle="tooltip" data-placement="top" title="<?= htmlspecialchars($column['description']) ?>"><?= htmlspecialchars($column['title']) ?></span>
+				</td>
+
+				<td>
+
+					<?php switch ($column['type']) {
+						case 'checkbox': ?>
+							<div class="border">
+								<label class="radio-inline"> <input type="radio" name="<?= $key ?>" value="1">Ano</label>
+								<label class="radio-inline"> <input checked type="radio" name="<?= $key ?>" value="0">Ne</label>
+							</div>
+						<?php break; ?>
+
+						<?php case 'textarea': ?>
+							<textarea class="form-control <?= !$column['setDefault'] ? 'notDefault' : null ?>" rows="3" name="<?= $key ?>"></textarea>
+						<?php break; ?>
+
+						<?php default: ?>
+							<input type="<?= htmlspecialchars($column['type']) ?>" class="form-control <?= !$column['setDefault'] ? 'notDefault' : null ?>" name="<?= $key ?>">
+						<?php break; ?>
+					<?php } ?>
+				</td>
+				<td>
+					<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="<?= htmlspecialchars($column['description']) ?>"></span>
+				</td>
+			</tr>
+<?php } // Konec Foreachu na procházení sloupců ?>
+		</tbody>
+	</table>
+
+	<div class="form-group">
+		<button type="submit" class="btn btn-danger">Vložit otázku!</button>
+	</div>
+</form> <!-- /#addForm -->
+
+<!-- Skript potřebný pro správný chod formuláře -->
+	<script type="text/javascript" src="<?= URL_ROOT ?>/media/js/add.js"></script>

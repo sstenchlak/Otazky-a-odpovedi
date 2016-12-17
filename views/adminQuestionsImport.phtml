@@ -1,0 +1,149 @@
+<h1>Importování otázek <small>= hromadné vložení otázek</small></h1>
+
+<div class="panel panel-default">
+	<div class="panel-body">
+		V Excelu si vytvořte tabulku obsahující seznam otázek vč. jejich obtížnosti, popř. kategorie. Tuto tabulku (bez hlavičky) zkopírujte do tohoto programu a nahrejte otázky.
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-body">
+Můžete také
+
+<a href="<?= URL_ROOT ?>/admin/questions/add/" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Vložit nové otázky</a>
+
+<a href="<?= URL_ROOT ?>/admin/questions/" class="btn btn-primary"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Spravovat otázky</a>
+
+<a href="<?= URL_ROOT ?>/admin/questions/categories/" class="btn btn-default"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Spravovat kategorie</a>
+
+	</div>
+</div>
+
+<hr>
+
+<style type="text/css">
+#questionsSource {
+	border: 5px dashed #EAEAEA;
+	min-height: 100px;
+	max-height: 100px;
+	overflow: hidden;
+	padding: 10px;
+	color: gray;
+	margin: 10px;
+}
+hr {
+	margin: 30px 0;
+}
+.info {
+	font-size: .8em;
+	font-style: italic;
+	font-weight: normal;
+}
+</style>
+
+<!-- Modal dialog, pro zdroj otázek... -->
+<div class="modal fade" id="modalGuestionsSource">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Zdroj otázek.</h4>
+			</div>
+			<div class="modal-body">
+				<h2>Vložte otázky z Excelu, nebo Wordu.</h2>
+				<p>Pomocí kláves <kbd>Ctrl</kbd>+<kbd>C</kbd> a <kbd>Ctrl</kbd>+<kbd>V</kbd> zkopírujte tabulku s otázkami a překopírujte ji do oblasti níže.</p>
+				<div contenteditable id="questionsSource"></div>
+				<button class="btn btn-success btn-sm" data-dismiss="modal" onclick="tableRefresh();"><b>Pokračovat</b> k dalšímu kroku</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<form method="POST" id="firstInputFrom">
+	<input type="hidden" name="AJAX" value="1">
+	<input type="hidden" name="action" value="question_import">
+	<!-- Zde se vloží JSON data -->
+		<input type="hidden" name="data" id="dataInputForm">
+
+<h3><small>Krok první:</small> Vložení otázek.</h3>
+<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#modalGuestionsSource" onclick="$('#questionsSource').html('');">
+Otevřít okno, kde vložím zkopírovanou tabulku s otázkami.
+</button>
+<table class="table table-bordered table-stylized plain-text-table" id="questionsView">
+	<thead>
+		<tr>
+		</tr>
+	</thead>
+	<tbody>
+		<tr><td><i>Jakmile vložíte tabulku, zde se zobrazí její náhled.</i></td></tr>
+	</tbody>
+</table>
+
+<hr>
+
+
+<h3><small>Krok druhý:</small> Označení sloupců v tabulce</h3>
+
+	<div class="form-group">
+		<p>Tabulka, kterou jste před chvíli zkopírovali, obsahuje několik sloupců, jedná se o sloupec s otázkou, kategorií otázky a obtížnosti otázky ap. Níže v tabulce prosím zaznačte, který sloupec je který. Pokud v tabulce nějaký sloupec chybí, můžete místo něj napsat <strong>náhradní hodnotu</strong>.</p>
+		<table class="table table-bordered table-stylized" style="max-width: 800px; margin: auto;">
+			<thead>
+				<tr>
+					<th>Sloupec<div class="info">Název potřebného údaje</div></th>
+					<th>Umístění v seznamu<div class="info">Ve kterém sloupci tabulky je tento údaj obsažen?</div></th>
+					<th>Náhradní hodnota<div class="info">Pokud není v tabulce, zvolte náhradní hodnotu pro všechny tyto otázky</div></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+	<?php foreach (questions::$columns as $key => $column) { ?>
+				<tr>
+					<td class="active"><span data-toggle="tooltip" data-placement="top" title="<?= htmlspecialchars($column['description']) ?>"><?= htmlspecialchars($column['title']) ?></span></td>
+					<td>
+						<span class="setColumns" data-columnName="<?= $key ?>"><i>Nejprve vložte tabulku</i></span>
+						<label class="radio-inline">
+							<input type="radio" name="col_<?= $key ?>" value="def">Náhr. hodn.
+						</label>
+					</td>
+					<td>
+						<?php if ($column['type'] != 'checkbox') { ?>
+							<input type="<?= htmlspecialchars($column['type']) ?>" class="form-control" id="def_<?= $key ?>" name="def_<?= $key ?>" placeholder="Použijte v případě náhr. hodn.">
+						<?php } else { ?>
+						<div class="border">
+							<label class="radio-inline"> <input type="radio" name="def_<?= $key ?>" value="1"> Ano</label>
+							<label class="radio-inline"> <input checked type="radio" name="def_<?= $key ?>" value="0"> Ne</label>
+						</div>
+						<?php } ?>
+					</td>
+					<td>
+						<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="<?= htmlspecialchars($column['description']) ?>"></span>
+					</td>
+				</tr>
+	<?php } // Konec Foreachu na procházení sloupců ?>
+			</tbody>
+		</table>
+	</div>
+
+	<hr>
+
+	<div class="form-group">
+		<button type="submit" formtarget="_blank" name="try" class="btn btn-danger">Importovat otázky do aplikace!</button>
+	</div>
+</form>
+
+<!-- Modal dialog, který se zobrazí, jako pokus o import dat... -->
+<div class="modal fade" id="modalImport">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Import otázek do aplikace.</h4>
+			</div>
+			<div class="modal-body">
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<script type="text/javascript" src="<?= URL_ROOT ?>/media/js/import.js"></script>

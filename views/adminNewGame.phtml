@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+	<div class="panel-body">
+		Zde se nachází nastavení hry, kde můžete určit, kolik sloupců hra bude obsahovat, jaké tam budou kategorie a podobně.
+		<hr>
+		Níže vidíte dvě tabulky, kde se nacházejí všechny možné sloupce, které lze do hry vložit (některé mohou být i vícekrát, neboť je dostatek otázek). Přesunutím položky z pravé tabulky do levé přidáte do hry další sloupec na pozici kterou vyberete.<br>
+Můžete tedy snadno určit, jaké sloupce ve hře budou.
+	</div>
+</div>
+
+<button class="btn btn-primary btn-block" onclick="$('#columnForm').submit();">Začít hrát!</button>
+
+<div id="columnSelect" class="row">
+	<div class="col-md-6">
+		<form method="POST" id="columnForm">
+			<!-- Potřebná data při odesílání POST požadavku -->
+				<input type="hidden" name="action" value="game_new">
+				<input type="hidden" name="AJAX" value="1">
+			<h3>Ve hře bude:</h3>
+			<ul id="selected">
+<?php foreach ($columns[0] as $column) { ?>
+				<li><?= $column ?><input type="hidden" name="columns[]" value="<?= $column ?>"></li>
+<?php } ?>
+			</ul>
+		</form>
+	</div>
+	<div class="col-md-6">
+		<h3>Na výběr máte z:</h3>
+		<ul id="avaiable">
+<?php foreach ($columns[1] as $column) { ?>
+			<li><?= $column ?><input type="hidden" name="columns[]" value="<?= $column ?>"></li>
+<?php } ?>
+		</ul>
+	</div>
+</div>
+
+
+<!-- Skript potřebný pro správný chod formuláře -->
+	<script type="text/javascript" src="<?= URL_ROOT ?>/media/js/jquery-ui.js"></script>
+	<script type="text/javascript" src="<?= URL_ROOT ?>/media/js/new-game.js"></script>
+	<link href="<?= URL_ROOT ?>/media/css/new-game.css" rel="stylesheet">

@@ -1,0 +1,267 @@
+<h1>Správa otázek</h1>
+<div class="panel panel-default">
+	<div class="panel-body">
+	<p>Vítejte ve správě otázek. Zde můžete otázky hromadně mazat, upravovat a měnit jim vlastnosti. Stačí je vybrat v tabulce pomocí myši a kláves. Více řádků vyberete podržením tlačítka Ctrl. Pokud chcete vybrat blok řádků, použijte klávesu Shift, nebo Shift + Ctrl, stejně jako ve Windowsech. Poté nad tabulkou vyberte požadovanou akci a klikněte na červené talčítko.</p>
+	<p>Ještě existuje správa katergorií, kde snáze přepíšete kategorii u otázek, nebo více kategorií sloučíte do jedné ap. Jedná se vlastně o změnu názvu kategorie, tak, aby byl stejný jako u jiných otázek.</p>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-body">
+Můžete také
+
+<a href="<?= URL_ROOT ?>/admin/questions/add/" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Vložit nové otázky</a>
+
+<a href="<?= URL_ROOT ?>/admin/questions/import/" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Hromadné vložení otázek (doporučeno)</a>
+
+<a href="<?= URL_ROOT ?>/admin/questions/categories/" class="btn btn-default"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Spravovat kategorie</a>
+	</div>
+</div>
+
+<hr>
+<h4>Seznam otázek</h4>
+
+
+<!-- Hlavní formulář --><!-- Hromadná akce -->
+<form method="POST" class="form-inline" id="multi_action_form">
+	<!-- Akce pro PHP která se má vykonat -->
+		<input type="hidden" name="AJAX" value="1">
+		<input type="hidden" name="action" value="questions_multi_action">
+
+		<div class="alert alert-warning question-alert question-alert-load" role="alert" style="display:none;">
+			<h4>Probíhá ukládání otázek</h4>
+			<p>Počkejte prosím, než se otázky uloží. Pokud to trvá dlouho, stiskněte F5.</p>
+		</div>
+
+		<div class="alert alert-danger question-alert question-alert-fail" role="alert" style="display:none;">
+			<h4>Chyba při ukládání!</h4>
+			<p>Vyskytla se chyba!</p>
+			<br>
+			<pre></pre>
+		</div>
+
+	<!-- Data ohledně výběru otázek -->
+	<input type="hidden" name="data" class="dataInputForm">
+
+	<p>
+		Hromadné úpravy
+		<select name="multi_action" class="form-inline form-control">
+			<option value="edit">Editovat</option>
+			<option value="del">Odstranit</option>
+			<option value="setNotUsed">Označit jako nepoužité</option>
+			<option value="setUsed">Označit jako použité</option>
+		</select>
+		<button type="submit" class="btn btn-danger">Vyberte, co chcete s otázkami udělat a klikněte zde</button>
+	</p>
+</form>
+
+<div style="text-align: right;">
+	<i>(Dvojklikem na otázku ji upravíte)</i>
+	<button type="button" class="btn btn-success btn-xs" onclick="selectAll(true);">Vybrat vše</button>
+	<button type="button" class="btn btn-danger btn-xs" onclick="selectAll(false);">Zrušit výběr</button>
+</div>
+
+
+
+
+
+
+
+<!-- Tabulka -->
+<table	id="questions" class="tablesorter table table-bordered table-stylized notUserSelect plain-text-table">
+	<thead>
+		<tr>
+			<?php foreach (array_merge(questions::$hideColumns,questions::$columns) as $ID => $column) { ?>
+			<th data-sortable="true" data-field="<?= $ID ?>"><?= $column['title'] ?></th>
+			<?php } ?>
+		</tr>
+	</thead>
+
+	<tbody>
+<?php foreach ($questions_list as $question) { ?>
+		<tr data-ID="<?= $question['ID'] ?>" class=""><!-- selectedRow -->
+			<?php foreach (array_merge(questions::$hideColumns,questions::$columns) as $ID => $column) { ?>
+
+<td <?= $ID == 'used' ? "data-value=\"" . $question[$ID] . "\"" : null ?> data-ID="<?= $question['ID'] ?>" data-field="<?= $ID ?>"><?php if ($ID == 'used') {
+						echo $question[$ID] ? '<span class="label label-danger">Použito</span>' : '-';
+					} else {
+						echo $question[$ID];
+					} ?></td>
+
+
+			<?php } ?>
+		</tr>
+<?php } ?>
+	</tbody>
+</table>
+
+
+
+
+
+
+
+<!-- Modal dialog pro hromadnou editaci vybraných otázek -->
+<div class="modal fade" id="questions_multi_edit">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Hromadná úprava <span class="dataCount label label-success">0</span> otázek</h4>
+			</div>
+
+			<div class="modal-body">
+				<p>Vyplňte, prosím, pole, které se hromadně změní, to co nevyplníte, zůstane nezměněno.</p>
+
+				<div class="alert alert-warning question-alert question-alert-load" role="alert" style="display:none;">
+					<h4>Probíhá ukládání otázek</h4>
+					<p>Počkejte prosím, než se otázky uloží. Pokud to trvá dlouho, stiskněte F5.</p>
+				</div>
+
+				<div class="alert alert-danger question-alert question-alert-fail" role="alert" style="display:none;">
+					<h4>Chyba při ukládání!</h4>
+					<p>Při pokusu o editaci se vyskytla chyba. Prosím zkontrolujte, zda jste všechny pole vyplnili správně a akci opakujte!</p>
+					<br>
+					<pre></pre>
+				</div>
+
+				<form method="POST">
+					<input type="hidden" name="AJAX" value="1">
+					<input type="hidden" name="action" value="questions_multi_action">
+
+					<input type="hidden" name="data" class="dataInputForm">
+					<input type="hidden" name="multi_action" value="edit">
+
+					<table class="table table-bordered table-stylized">
+						<tbody>
+						<?php foreach (questions::$columns as $key => $column) { ?>
+							<tr>
+								<td><span data-toggle="tooltip" data-placement="top" title="<?= htmlspecialchars($column['description']) ?>"><?= htmlspecialchars($column['title']) ?></span>
+								</td>
+
+								<td>
+									<label>
+										<input type="checkbox" name="set_<?= $key ?>" class="disabler">
+										Tuto hodnotu upravit
+									</label>
+								</td>
+
+								<td>
+
+									<?php switch ($column['type']) {
+										case 'checkbox': ?>
+											<div class="border">
+												<label class="radio-inline"> <input type="radio" name="<?= $key ?>" value="1">Ano</label>
+												<label class="radio-inline"> <input checked type="radio" name="<?= $key ?>" value="0">Ne</label>
+											</div>
+										<?php break; ?>
+
+										<?php case 'textarea': ?>
+											<textarea class="form-control <?= !$column['setDefault'] ? 'notDefault' : null ?>" rows="3" name="<?= $key ?>"></textarea>
+										<?php break; ?>
+
+										<?php default: ?>
+											<input type="<?= htmlspecialchars($column['type']) ?>" class="form-control <?= !$column['setDefault'] ? 'notDefault' : null ?>" name="<?= $key ?>">
+										<?php break; ?>
+									<?php } ?>
+								</td>
+								<td>
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="<?= htmlspecialchars($column['description']) ?>"></span>
+								</td>
+							</tr>
+						<?php } // Konec Foreachu na procházení sloupců ?>
+						</tbody>
+					</table>
+
+					<div class="form-group">
+						<button type="submit" class="btn btn-danger">Hromadně nastavit <b class="dataCount">0</b> vybraným otázkám tyto vlastnosti!</button>
+					</div>
+				</form> <!-- /#addForm -->
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+
+<!-- Modal dialog na editaci otázky -->
+<div class="modal fade" id="question_edit">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Úprava otázky</h4>
+			</div>
+
+			<div class="modal-body">
+				<div class="alert alert-warning question-alert question-alert-load" role="alert" style="display:none;">
+					<h4>Probíhá ukládání otázky</h4>
+					<p>Počkejte prosím, než se otázka uloží. Pokud to trvá dlouho, stiskněte F5.</p>
+				</div>
+
+				<div class="alert alert-danger question-alert question-alert-fail" role="alert" style="display:none;">
+					<h4>Chyba při ukládání!</h4>
+					<p>Při pokusu o editaci se vyskytla chyba. Prosím zkontrolujte, zda jste všechny pole vyplnili správně a akci opakujte!</p>
+					<br>
+					<pre></pre>
+				</div>
+
+				<form method="POST">
+					<input type="hidden" name="AJAX" value="1">
+					<input type="hidden" name="action" value="questions_multi_action">
+
+					<input type="hidden" name="data" class="dataInputForm">
+					<input type="hidden" name="multi_action" value="single_edit">
+
+					<table class="table table-bordered table-stylized">
+						<tbody>
+						<?php foreach (questions::$columns as $key => $column) { ?>
+							<tr>
+								<td><span data-toggle="tooltip" data-placement="top" title="<?= htmlspecialchars($column['description']) ?>"><?= htmlspecialchars($column['title']) ?></span>
+								</td>
+
+								<td>
+
+									<?php switch ($column['type']) {
+										case 'checkbox': ?>
+											<div class="radio border field" data-field="<?= $key ?>">
+												<label class="radio-inline"> <input type="radio" name="<?= $key ?>" value="1">Ano</label>
+												<label class="radio-inline"> <input checked type="radio" name="<?= $key ?>" value="0">Ne</label>
+											</div>
+										<?php break; ?>
+
+										<?php case 'textarea': ?>
+											<textarea data-field="<?= $key ?>" class="field form-control <?= !$column['setDefault'] ? 'notDefault' : null ?>" rows="3" name="<?= $key ?>"></textarea>
+										<?php break; ?>
+
+										<?php default: ?>
+											<input data-field="<?= $key ?>" type="<?= htmlspecialchars($column['type']) ?>" class="field form-control <?= !$column['setDefault'] ? 'notDefault' : null ?>" name="<?= $key ?>">
+										<?php break; ?>
+									<?php } ?>
+								</td>
+								<td>
+									<span class="glyphicon glyphicon-question-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="<?= htmlspecialchars($column['description']) ?>"></span>
+								</td>
+							</tr>
+						<?php } // Konec Foreachu na procházení sloupců ?>
+						</tbody>
+					</table>
+
+					<div class="form-group">
+						<button type="submit" class="btn btn-danger">Uložit</button>
+					</div>
+				</form> <!-- /#addForm -->
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Skripty potřebné pro fungování této stránky - řazení tabulky a odesílání formuláře -->
+	<script type="text/javascript" src="<?= URL_ROOT ?>/media/js/questions.js"></script>
+	<script type="text/javascript" src="<?= URL_ROOT ?>/media/js/tablesorter-select.js"></script>

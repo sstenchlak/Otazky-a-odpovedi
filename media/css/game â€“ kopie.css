@@ -1,0 +1,163 @@
+/**
+ * Jediný stylesheet pro stránky s herním plátnem /game/*
+ */
+
+body {
+	padding: 10px;
+}
+
+/**
+ * Stránka s tabulkou.
+ */
+
+/* Tabulka */
+
+#gameTable {
+	margin: auto;
+}
+
+#gameTable td, th {
+	width: 150px;
+	min-width: 150px;
+	max-width: 150px;
+	text-align: center;
+}
+
+#gameTable th {
+/*	word-wrap: break-word; */
+	font-size: 2em;
+	padding-bottom: 20px;
+}
+
+#gameTable td {
+	height: 100px;
+}
+
+/* Klikací tlačítko s počtem bodů jako nápis */
+
+.game-button {
+	height: 90px;
+	width: 135px;
+	border: none;
+	transition: all .5s ease;
+
+	color: white;
+	font-size: 50px;
+	font-weight: bold;
+}
+
+.game-button.used { /* Velice šedé tlačítko, použité */
+	background-color: #F0F0F0;
+	dbackground: white;
+}
+
+.game-button.available:hover { /* Aktivní tlačítko, na které se ukazuje */
+	background: #f1da36 !important;
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2YxZGEzNiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmY2VmN2UiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+) !important;
+	background: -moz-linear-gradient(top,  #f1da36 0%, #fcef7e 100%) !important;
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f1da36), color-stop(100%,#fcef7e)) !important;
+	background: -webkit-linear-gradient(top,  #f1da36 0%,#fcef7e 100%) !important;
+	background: -o-linear-gradient(top,  #f1da36 0%,#fcef7e 100%) !important;
+	background: -ms-linear-gradient(top,  #f1da36 0%,#fcef7e 100%) !important;
+	background: linear-gradient(to bottom,  #f1da36 0%,#fcef7e 100%) !important;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f1da36', endColorstr='#fcef7e',GradientType=0 ) !important;
+	color: black !important;
+}
+
+/* Spodní skóre */
+
+.score {
+	position: fixed;
+	bottom: 0;
+	font-size: 150px;
+	line-height: 150px;
+	font-weight: bold;
+	padding: 10px;
+}
+
+#leftScore { left: 0; }
+#rightScore { right: 0; }
+
+
+
+
+
+/**
+ * Otázka a odpověď
+ */
+
+/* Překryvné divy obsahjící otázky a odpovědi */
+
+.gameQuestion { /* Jak otázka, tak i odpověď */
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: table;
+	font-size: 80px;
+	padding: 10px;
+}
+
+.gameQuestion>div {
+	text-align: center;
+	vertical-align: middle;
+	display: table-cell;
+}
+
+#question {
+	background: rgb(200, 0, 0);
+	color: white;
+}
+
+#solution { /* Ve výchozím je skrytý */
+	background: rgb(215, 247, 8);
+	transition: opacity .5s ease;
+}
+
+#solution.showIt {
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+
+/* Spodní ovládání */
+
+.gameBoardBottom {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 0;
+	line-height: 0;
+	text-align: center;
+	cursor: pointer;
+}
+
+.gameBoardBottom div {
+	height: 40px;
+	background-color: black;
+}
+
+.buttonLeft, .buttonRight {opacity: .2}
+.buttonCenter {opacity: .1}
+
+
+
+
+
+/**
+ * Zatemňovač obrazovky
+ */
+
+#darkness {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	display: none;
+	background-color: #000000;
+}

@@ -1,0 +1,26 @@
+# Aplikace Otázky a odpovědi, pro více informací:
+# @see index.php
+
+# Všechny požadavky na neexistující stránky se směřují na
+# /index.php, kde se na základě URL adresy vybere daná stránka,
+# která se zobrazí. Systém funguje na základech MVC architektury,
+# je zde Router, který načítá jednotlivé kontrolery (jsou to
+# pouze stránky, ne třídy). Tyto kontrolery vykonávají určité
+# akce a poté nastaví pohledy (metoda Routeru). Nakonec se
+# vše vykreslí (metoda Router::run()).
+
+# Kódování pro prohlížeče na UTF-8
+	AddCharset UTF-8 .html .htm .php .css .js
+
+# Zákaz indexování obsahu stránek
+	Options -Indexes
+
+# Redirect na index (přesměruje neexistující soubory)
+	RewriteEngine On
+	RewriteBase /
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule !\.(css|js|icon|zip|rar|png|jpg|gif|pdf)$ index.php [L]
+
+# Šablony phtml používané jako pohledy se budou považovat za php s kódem
+	AddType application/x-httpd-php .php .phtml

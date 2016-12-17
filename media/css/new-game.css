@@ -1,0 +1,33 @@
+/**
+ * CSS styly pro stránku, kde se nachází výběr nové hry.
+ */
+
+#columnSelect ul {
+	padding: 5px 5px 40px 5px;
+}
+
+/* Ona přesouvatelná položka */
+#columnSelect li {
+	background: white;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);
+	box-shadow: 0 1px 1px rgba(0,0,0,.05);
+
+	padding: 5px 10px;
+	margin: 5px 0;
+	list-style-type: none;
+	font-size: 13px;
+	line-height: 13px;
+	transition: background-color, color .5s ease;
+
+	cursor: move;
+}
+
+/* Ukazatel, kde se položka umístí, pokud bude právě upuštěna */
+#columnSelect li.placeholder {
+	background-color: white;
+	border: 1px solid #333;
+	min-height: 25px;
+	border-style: dashed;
+}

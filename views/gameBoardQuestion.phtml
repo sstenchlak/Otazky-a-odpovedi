@@ -1,0 +1,24 @@
+
+<!--
+ŠABLONA GAMEBOARDQUESTION.PHTML
+!-->
+
+<div class="gameQuestion" id="question" onclick="$('#solution').css('visibility', 'visible').css('opacity', 1);"><div>
+<?= $question['question']; ?>
+</div></div>
+
+<!-- Řešení otázky -->
+<div class="gameQuestion" id="solution" style="visibility: hidden; opacity: 0;"><div>
+<?= $question['result']; ?>
+</div></div>
+
+<!-- Dolní ovládací panel -->
+<div class="gameBoardBottom row">
+	<div class="buttonLeft col-md-4" onclick="closeQuestion(0);"></div>
+	<div class="buttonCenter col-md-4" onclick="closeQuestion(2);"></div>
+	<div class="buttonRight col-md-4" onclick="closeQuestion(1);"></div>
+</div>
+
+<!--
+ / ŠABLONA GAMEBOARDQUESTION.PHTML
+!-->

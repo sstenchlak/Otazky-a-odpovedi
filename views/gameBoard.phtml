@@ -1,0 +1,57 @@
+
+<!--
+ŠABLONA GAMEBOARD.PHTML
+!-->
+
+<table id="gameTable">
+
+	<thead>
+		<tr>
+<?php foreach ($columns as $column) { ?>
+			<th><?= $column ?></th>
+<?php } // Konec vypisování sloupů ?>
+		</tr>
+	</thead>
+
+	<tbody>
+<?php $y = -1; foreach (questions::$difficulty as $difficulty_val) { $y++; ?>
+		<tr>
+	<?php $x = -1; foreach ($columns as $column) { $x++; ?>
+<?php
+// Výpočet barvy
+	$color =array(200, 0, 0);
+	$start = array();
+		foreach ($color as $value) $start[] = floor( (1-.5*$y/count(questions::$difficulty))*$value );
+	$stop = array();
+		foreach ($color as $value) $stop[] = floor( (1-.5*(1+$y)/count(questions::$difficulty))*$value );
+
+	$c1 = implode(',', $start);
+	$c2 = implode(',', $stop);
+?>
+			<td>
+		<?php if (!in_array(array($x,$y), $disabledCells)) { ?>
+				<button data-x="<?= $x ?>" data-y="<?= $y ?>" onclick="openQuestion(this);" class="game-button available" style="background: rgb(<?= $c1 ?>);
+background: -moz-linear-gradient(top, rgb(<?= $c1 ?>) 0%, rgb(<?= $c2 ?>) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(<?= $c1 ?>)), color-stop(100%,rgb(<?= $c2 ?>))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, rgb(<?= $c1 ?>) 0%,rgb(<?= $c2 ?>) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, rgb(<?= $c1 ?>) 0%,rgb(<?= $c2 ?>) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, rgb(<?= $c1 ?>) 0%,rgb(<?= $c2 ?>) 100%); /* IE10+ */
+background: linear-gradient(to bottom, rgb(<?= $c1 ?>) 0%,rgb(<?= $c2 ?>) 100%); /* W3C */"><?= $difficulty_val ?></button>
+		<?php } else {?>
+				<button data-x="<?= $x ?>" data-y="<?= $y ?>" onclick="openQuestion(this, true);" class="game-button used">
+					<?= $difficulty_val ?>
+				</button>
+		<?php } // Konec podmínky na vykreslení tlačítka ?>
+		</td>
+	<?php } // Konec procházení sloupců ?>
+		</tr>
+<?php } // Konec foreachu na $difficulty_val ?>
+	</tbody>
+</table>
+
+<div class="score" id="leftScore"><?= $lScore ?></div>
+<div class="score" id="rightScore"><?= $rScore ?></div>
+
+<!--
+ / ŠABLONA GAMEBOARD.PHTML
+!-->

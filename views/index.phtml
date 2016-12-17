@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>Aplikace Otázky a odpovědi</title>
+
+		<!-- JQUERY -->
+		<script src="<?= URL_ROOT ?>/media/js/jquery.js"></script>
+
+		<!-- BOOTSTRAP -->
+		<link href="<?= URL_ROOT ?>/media/bootstrap/bootstrap.min.css" rel="stylesheet">
+		<script src="<?= URL_ROOT ?>/media/bootstrap/bootstrap.min.js"></script>
+
+		<!-- jQuery form -->
+		<script src="<?= URL_ROOT ?>/media/js/jquery.form.js"></script>
+
+		<!-- TABLESORTER -->
+		<script src="<?= URL_ROOT ?>/media/tablesorter/jquery.tablesorter.min.js"></script>
+		<link href="<?= URL_ROOT ?>/media/tablesorter/style.css" rel="stylesheet">
+		<style type="text/css">.souhrn{display: none;}</style>
+
+		<!-- VLASTNÍ -->
+		<link href="<?= URL_ROOT ?>/media/css/admin.css" rel="stylesheet">
+		<script src="<?= URL_ROOT ?>/media/js/admin.js"></script>
+	</head>
+
+	<body class="background">
+		<div class="container">
+		<h1>Aplikace Otázky a odpovědi</h1>
+		<div class="panel panel-default">
+			<div class="panel-body">
+				Zobrazí se herní pole se seznamem různých kategorií. Pod každnou z nich se nachází několik očíslovaných tlačítek s otázkou. Dva týmy hrající proti sobě si políčka postupně vybírají a tak odpovídají na otázky. V průběhu hry se jim v rozích zapisují body.
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-9">
+		<a href="admin/" class="btn btn-success btn-block">Přesunout se do nastavení.</a>
+			</div>
+			<div class="col-md-3">
+		<a href="game/" class="btn btn-default btn-block">Ihned hrát.</a>
+			</div>
+		</div>
+		</div>
+	</body>
+
+</html>

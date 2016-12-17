@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<title>Hra</title>
+
+	<!-- JQUERY -->
+	<script src="<?= URL_ROOT ?>/media/js/jquery.js"></script>
+
+	<!-- BOOTSTRAP -->
+	<link href="<?= URL_ROOT ?>/media/bootstrap/bootstrap.min.css" rel="stylesheet">
+	<script src="<?= URL_ROOT ?>/media/bootstrap/bootstrap.min.js"></script>
+
+	<!-- VLASTNÍ CSS -->
+	<link href="<?= URL_ROOT ?>/media/css/game.css" rel="stylesheet">
+
+	<!-- VALSTNÍ JS -->
+	<script src="<?= URL_ROOT ?>/media/js/game.js"></script>
+	<style type="text/css">.souhrn{display: none;}</style>
+</head>
+<body>
+
+<!-- Page Content -->
+<div class="container">
+	<div id="gameBoard">
+<?php $this->run(TRUE); // Načte šablonu ?>
+	</div>
+</div>
+<!-- /.container -->
+
+<div id="darkness"></div>
+
+</body>
+
+</html>

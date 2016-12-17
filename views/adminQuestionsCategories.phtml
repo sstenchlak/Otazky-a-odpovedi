@@ -1,0 +1,95 @@
+<h1>Správa kategorií</h1>
+<div class="panel panel-default">
+	<div class="panel-body">
+	<p>Vítejte ve správě kategorií. Více řádků v tabulce vyberete podržením tlačítka Ctrl. Pokud chcete vybrat blok řádků, použijte klávesu Shift, nebo Shift + Ctrl, stejně jako ve Windowsech. Poté nad tabulkou vyberte požadovanou akci a klikněte na červené talčítko.</p>
+	</div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-body">
+Můžete také
+
+<a href="<?= URL_ROOT ?>/admin/questions/add/" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Vložit nové otázky</a>
+
+<a href="<?= URL_ROOT ?>/admin/questions/import/" class="btn btn-default"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Hromadné vložení otázek (doporučeno)</a>
+
+<a href="<?= URL_ROOT ?>/admin/questions/" class="btn btn-primary"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Spravovat otázky</a>
+
+	</div>
+</div>
+
+<hr>
+<h4>Seznam kategorií</h4>
+
+<!-- Otevře modal dialog na editaci -->
+<button id="open" class="btn btn-danger" data-toggle="modal" data-target="#categories_edit">Editovat název kategorie / kategorií</button>
+
+<!-- Tabulka -->
+<table	id="categories" class="tablesorter table table-bordered table-stylized notUserSelect">
+	<thead>
+		<tr>
+			<th>Název kategorie</th>
+			<th>Počet otázek v kategorii</th>
+		</tr>
+	</thead>
+
+	<tbody>
+<?php foreach ($category_list as $category) { ?>
+		<tr data-ID="<?= $category['category'] ?>" class=""><!-- selectedRow -->
+			<?php foreach (array('category', 'count') as $what) { ?>
+			<td data-ID="<?= $category['category'] ?>" data-field="<?= $what ?>"><?= $category[$what] ?></td>
+			<?php } ?>
+		</tr>
+<?php } ?>
+	</tbody>
+</table>
+
+<!-- Našeptávač, který se sám naplní při výběru řádků -->
+<datalist id="categories_list"></datalist>
+
+<!-- Modal dialog pro editaci názvu kategorie -->
+<div class="modal fade" id="categories_edit">
+	<div class="modal-dialog">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Přejmenování kategorie / kategorií</h4>
+			</div>
+
+			<div class="modal-body">
+				<p>Vyplňte, prosím název, jak se bude jmenovat vybraná kategorie. V případě, že jste jich vybrali více, budou sloučeny do jedné.</p>
+
+				<div class="alert alert-warning question-alert question-alert-load" role="alert" style="display:none;">
+					<h4>Probíhá ukládání otázek</h4>
+					<p>Počkejte prosím, než se otázky uloží. Pokud to trvá dlouho, stiskněte F5.</p>
+				</div>
+
+				<div class="alert alert-danger question-alert question-alert-fail" role="alert" style="display:none;">
+					<h4>Chyba při ukládání!</h4>
+					<p>Při pokusu o editaci se vyskytla chyba. Prosím zkontrolujte, zda jste všechny pole vyplnili správně a akci opakujte!</p>
+					<br>
+					<pre></pre>
+				</div>
+
+				<form method="POST">
+					<!-- Akce pro PHP která se má vykonat -->
+						<input type="hidden" name="action" value="questions_multi_action">
+					<!-- Podakce pro skript multi_action -->
+						<input type="hidden" name="multi_action" value="categories">
+
+					<input type="hidden" name="data" class="dataInputForm">
+
+					<p>Nový název pro kategorii bude <input list="categories_list" type="text" class="form-control" name="name"></p>
+
+					<div class="form-group">
+						<button type="submit" class="btn btn-danger">Uložit!</button>
+					</div>
+				</form> <!-- /#addForm -->
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script type="text/javascript" src="<?= URL_ROOT ?>/media/js/categories.js"></script>
+<script type="text/javascript" src="<?= URL_ROOT ?>/media/js/tablesorter-select.js"></script>

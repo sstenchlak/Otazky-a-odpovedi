@@ -1,0 +1,97 @@
+<!-- Hlavní stránka administrace -->
+
+<h1>Nastavení hry</h1>
+
+<div class="panel panel-default">
+	<div class="panel-body">
+		<h4>Rychlé informace</h4>
+		<p>V aplikaci je nyní <span class="label label-primary"><?= $questions['total'] ?></span> otázek, z nichž je ještě <span class="label label-success"><?= $questions['notUsed'] ?></span> nepoužitých. Tedy takových, které ještě nebyly při hře odhalené. Použitých otázek je <span class="label label-danger"><?= $questions['used'] ?></span>.</p>
+		<p>Tyto otázky jsou rozděleny celkem v <span class="label label-success"><?= $questions['categories'] ?></span> herních kategoriích. Zdá se to moc? Mohla nastat chyba. Slučte kategorie ve Správě kategorií (levý panel poslední tlačítko).</p>
+	</div>
+</div>
+
+
+<div class="row text-center">
+
+	<div class="col-sm-6 hero-feature">
+		<div class="thumbnail">
+			<div class="caption">
+				<h3><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Správa otázek</h3>
+				<p>Zde můžete upravovat jednotlivé otázky, přidávat je, nebo je mazat. Stačí kliknout na tlačítko níže. Kromě toho můžete snadno spravovat kategorie, což je vhodné, pokud jste špatně vkládali otázky.</p>
+				<p>
+					<a href="<?= URL_ROOT ?>/admin/questions/add/" class="btn btn-default btn-block"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Vložit nové otázky</a>
+
+					<a href="<?= URL_ROOT ?>/admin/questions/import/" class="btn btn-default btn-block"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Hromadné vložení otázek (doporučeno)</a>
+
+					<a href="<?= URL_ROOT ?>/admin/questions/" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Spravovat otázky</a>
+
+					<a href="<?= URL_ROOT ?>/admin/questions/categories/" class="btn btn-default btn-block"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> Spravovat kategorie</a>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-6 hero-feature">
+		<div class="thumbnail">
+			<div class="caption">
+				<h3><span class="glyphicon glyphicon-tower" aria-hidden="true"></span> Hra</h3>
+				<p>Při hře soutěží proti sobě dva týmy a odpovídají na otázky zobrazené na monitoru. Je možné hrát jen jednu hru současně. Během hry prosím neupravujte otázky.</p>
+					<button id="newGame" class="btn btn-default btn-block"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Spustit novou hru</button>
+<?php if ($isGame) { ?>
+					<a href="<?= URL_ROOT ?>/game/" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-play" aria-hidden="true"></span> Pokračovat do hry</a>
+					<button class="btn btn-default btn-block"  onclick="$('#modalEnd').modal('show')"><span class="glyphicon glyphicon-stop" aria-hidden="true"></span> Ukončit hru.</button>
+<?php } ?>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- /.row -->
+
+<!-- Modal dialog -->
+<div class="modal fade" id="modalNewGame">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Vytvořit novou hru.</h4>
+			</div>
+			<div class="modal-body">
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script type="text/javascript">
+$("#newGame").click(function(){
+	$("#modalNewGame .modal-body").html('<h2 style=\'text-align: center;\'>Počkejte prosím...</h2>');
+	$('#modalNewGame').modal('show');
+	$.post('', {action: 'admin_newGame', AJAX: true}, function(data){ $("#modalNewGame .modal-body").html(data); });
+});
+</script>
+
+<!-- Modal dialog, který se dotáže na ukončení hry. -->
+<div class="modal fade" id="modalEnd">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">Ukončit hru.</h4>
+			</div>
+			<div class="modal-body">
+				<p>Opravdu chcete ukončit probíhající hru? Již nebude možné tuto akci vrátit zpět.</p>
+				<button class="btn btn-danger" id="endGame">Ukončit hru</button>
+				<button class="btn btn-default" data-dismiss="modal">Neukončovat hru.</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script type="text/javascript">
+// Při kliknutí na tlačítko ukončit hru
+$("#modalEnd #endGame").click(function(){
+	$("#modalEnd .modal-body").html('<h2 style=\'text-align: center;\'>Počkejte prosím...</h2>');
+	$.post('', {action: 'game_end', AJAX: true}, function(){ location.reload(true); });
+});
+</script>
+
+
+<script type="text/javascript" src="<?= URL_ROOT ?>/media/js/import.js"></script>
